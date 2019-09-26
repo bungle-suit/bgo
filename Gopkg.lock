@@ -130,22 +130,9 @@
   revision = "8130c1d7596bc28a74df2c52173a89d6a7a06482"
 
 [[projects]]
-  digest = "1:ac83cf90d08b63ad5f7e020ef480d319ae890c208f8524622a2f3136e2686b02"
-  name = "github.com/stretchr/objx"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "477a77ecc69700c7cdeb1fa9e129548e1c1c393c"
-  version = "v0.1.1"
-
-[[projects]]
-  digest = "1:7a905394a784c598221920806f290b22b07ac787e1945af762c5c475781084f4"
+  digest = "1:8548c309c65a85933a625be5e7d52b6ac927ca30c56869fae58123b8a77a75e1"
   name = "github.com/stretchr/testify"
-  packages = [
-    ".",
-    "assert",
-    "http",
-    "mock",
-  ]
+  packages = ["assert"]
   pruneopts = "UT"
   revision = "221dbe5ed46703ee255b1da0dec05086f5035f62"
   version = "v1.4.0"
@@ -258,11 +245,13 @@
   input-imports = [
     "github.com/hashicorp/go-version",
     "github.com/redforks/config",
+    "github.com/redforks/life",
     "github.com/redforks/testing/reset",
-    "github.com/stretchr/testify",
+    "github.com/stretchr/testify/assert",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
+    "go.mongodb.org/mongo-driver/mongo/writeconcern",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

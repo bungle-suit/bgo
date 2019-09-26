@@ -32,6 +32,9 @@ func ClientOptions() *options.ClientOptions {
 
 // Database returns configured mongo database name.
 func Database() string {
+	if database == "" {
+		log.Panicf("[%s] Database not set", tag)
+	}
 	return database
 }
 
