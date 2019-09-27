@@ -8,7 +8,6 @@ import (
 
 	version "github.com/hashicorp/go-version"
 	"github.com/redforks/config"
-	"github.com/redforks/testing/reset"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -78,12 +77,10 @@ func (o *option) Apply() {
 }
 
 func newDefaultOption() config.Option {
-	opt := option{}
-	if reset.TestMode() {
-		opt.DbURL = testDbURL
-		opt.Database = TestDBName
+	return &option{
+		DbURL:    localDbURL,
+		Database: "test",
 	}
-	return &opt
 }
 
 func init() {

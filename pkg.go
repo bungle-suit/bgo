@@ -2,7 +2,6 @@ package bgo
 
 import (
 	"log"
-	"time"
 
 	"github.com/redforks/testing/reset"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -14,7 +13,7 @@ const (
 	// TestDBName dbworker default test database name
 	TestDBName = "unittest"
 
-	testDbURL = "127.0.0.1"
+	localDbURL = "mongodb://127.0.0.1"
 )
 
 var (
@@ -44,7 +43,10 @@ func SetTestDB() {
 		panic("Call SetTestDB only in unit test mode")
 	}
 
-	clientOptions = options.Client().ApplyURI(testDbURL).
-		SetConnectTimeout(2 * time.Second).
-		SetSocketTimeout(2 * time.Second)
+	if err := (&option{
+		DbURL:    localDbURL,
+		Database: TestDBName,
+	}).Init(); err != nil {
+		panic(err)
+	}
 }
