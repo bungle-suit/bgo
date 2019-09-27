@@ -3,7 +3,7 @@ package bgo
 import (
 	"log"
 
-	"github.com/redforks/testing/reset"
+	"github.com/bungle-suit/tt"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -39,8 +39,7 @@ func Database() string {
 
 // SetTestDB set ClientOptions to 127.0.0.1/TestDBName
 func SetTestDB() {
-	// TODO: switch to use tt.TestMode
-	if !reset.TestMode() {
+	if !tt.TestMode() {
 		panic("Call SetTestDB only in unit test mode")
 	}
 
