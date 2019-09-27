@@ -2,14 +2,17 @@ package testdb
 
 import (
 	"context"
+	"io"
+	"testing"
 
 	"github.com/bungle-suit/bgo"
+	"github.com/bungle-suit/tt"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// TestDb create a connection to mongodb, and delete the database in reset. Also
+// TestDB create a connection to mongodb, and delete the database in reset. Also
 // provide mongodb operation methods, so we do not need to deal with returned error.
-// *mgo.Databae is nested in, so all Database method con be used directly from TestDb, such as:
+// *mgo.Databae is nested in, so all Database method con be used directly from TestDB, such as:
 //
 //   db := testdb.New("blah_test")
 //   db.C("tbl").Insert(...
@@ -17,25 +20,26 @@ import (
 // Instead of:
 //
 //   db.Session.DB("").C("tbl").Insert(...
-type TestDb struct {
+type TestDB struct {
 	*mongo.Database
 	client *mongo.Client
 	closed bool
 }
 
-// New TestDb instance.
-func New() *TestDb {
+// New TestDB instance.
+func New() *TestDB {
+	bgo.SetTestDB()
 	client, err := mongo.Connect(context.Background(), bgo.ClientOptions())
 	if err != nil {
 		panic(err)
 	}
 	db := client.Database(bgo.Database())
 
-	return &TestDb{db, client, false}
+	return &TestDB{db, client, false}
 }
 
-// Close TestDb.
-func (db *TestDb) Close() error {
+// Close TestDB.
+func (db *TestDB) Close() error {
 	if db.closed {
 		return nil
 	}
@@ -46,4 +50,15 @@ func (db *TestDb) Close() error {
 	}
 
 	return db.client.Disconnect(context.Background())
+}
+
+// Test create a test function that uses of mongodb
+func Test(f func(db *TestDB, t *testing.T)) tt.TestFunction {
+	var db *TestDB
+	return tt.Closer(func() io.Closer {
+		db = New()
+		return db
+	}, func(t *testing.T) {
+		f(db, t)
+	})
 }

@@ -41,3 +41,14 @@ func TestTestDb(t *testing.T) {
 
 	assertCollNotExist(t, "foo")
 }
+
+func TestWrap(t *testing.T) {
+	t.Run("Test", testdb.Test(func(db *testdb.TestDB, t *testing.T) {
+		assertCollNotExist(t, "foo")
+		ctx := context.Background()
+		_, err := db.Collection("foo").InsertOne(ctx, bson.M{"_id": 33})
+		assert.NoError(t, err)
+		assert.NoError(t, db.Close())
+	}))
+	assertCollNotExist(t, "foo")
+}

@@ -30,22 +30,5 @@
   unused-packages = true
 
 [[constraint]]
-  branch = "master"
-  name = "go.mongodb.org/mongo-driver"
-
-[[override]]
-  name = "github.com/cpuguy83/go-md2man"
-  version = "2.0.0"
-
-
-[[constraint]]
-  name = "github.com/hashicorp/go-version"
-  version = "1.2.0"
-
-[[constraint]]
   name = "github.com/stretchr/testify"
   version = "1.4.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/bungle-suit/tt"

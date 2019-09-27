@@ -10,6 +10,14 @@
   version = "v0.3.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:51a75f7e04d1fdfcf9224e79a57f812cd04202ba8f9bbb474eb0242110430c32"
+  name = "github.com/bungle-suit/tt"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c9feb8cc57e3d0d8ab68913cfce19c0eb0846c37"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -243,8 +251,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/bungle-suit/tt",
     "github.com/hashicorp/go-version",
     "github.com/redforks/config",
+    "github.com/redforks/errors",
     "github.com/redforks/life",
     "github.com/redforks/testing/reset",
     "github.com/stretchr/testify/assert",

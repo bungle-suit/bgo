@@ -39,6 +39,7 @@ func Database() string {
 
 // SetTestDB set ClientOptions to 127.0.0.1/TestDBName
 func SetTestDB() {
+	// TODO: switch to use tt.TestMode
 	if !reset.TestMode() {
 		panic("Call SetTestDB only in unit test mode")
 	}

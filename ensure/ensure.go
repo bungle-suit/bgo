@@ -14,12 +14,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 )
 
-// EnsureFunc is a callback to ensure database feature enabled, such as index,
+// Func is a callback to ensure database feature enabled, such as index,
 // capped collection etc.
-type EnsureFunc func(db *mongo.Database) error
+type Func func(ctx context.Context, db *mongo.Database) error
 
 type ensureRec struct {
-	fn        EnsureFunc
+	fn        Func
 	pkg, name string
 }
 
@@ -34,7 +34,7 @@ var (
 // mongodb order is not important.
 //
 // pkg and name generate log message, do not need to be unique.
-func RegisterEnsure(pkg, name string, fn EnsureFunc) {
+func RegisterEnsure(pkg, name string, fn Func) {
 	if fn == nil {
 		log.Panicf("[%s] Ensure function %s.%s can not be nil", tag, pkg, name)
 	}
@@ -43,11 +43,11 @@ func RegisterEnsure(pkg, name string, fn EnsureFunc) {
 	ensureFuncs = append(ensureFuncs, ensureRec{fn, pkg, name})
 }
 
-func playEnsure(db *mongo.Database) error {
+func playEnsure(ctx context.Context, db *mongo.Database) error {
 	for _, rec := range ensureFuncs {
 		t := time.Now()
 		log.Printf("[%s] Ensure: %s (%s)", tag, rec.name, rec.pkg)
-		if err := rec.fn(db); err != nil {
+		if err := rec.fn(ctx, db); err != nil {
 			return err
 		}
 		log.Printf("[%s] %s (%s), done in %s", tag, rec.name, rec.pkg, time.Since(t))
@@ -60,17 +60,18 @@ func start() {
 		return
 	}
 
+	ctx := context.Background()
 	opts := options.MergeClientOptions(bgo.ClientOptions(),
 		options.Client().SetWriteConcern(
 			writeconcern.New(writeconcern.WMajority(), writeconcern.J(true))))
-	client, err := mongo.Connect(context.Background(), opts)
+	client, err := mongo.Connect(ctx, opts)
 	client.StartSession()
 	if err != nil {
 		log.Panicf("[%s] %w", tag, err)
 	}
 	defer client.Disconnect(context.Background())
 
-	if err = playEnsure(client.Database(bgo.Database())); err != nil {
+	if err = playEnsure(ctx, client.Database(bgo.Database())); err != nil {
 		log.Panicf("[%s] %s", tag, err)
 	}
 }
